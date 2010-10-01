@@ -1,5 +1,5 @@
 <?php
-$port = 8124;
+$port = 8003;
 $node = '/usr/local/bin/node';
 $queue = 'queue.js';
 $queue_cmd = $node.' '.$queue;

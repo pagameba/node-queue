@@ -1,6 +1,11 @@
 <?php
+$host = 'localhost';
+$host = 'ec2-174-129-57-251.compute-1.amazonaws.com';
+$port = 8001;
+
 $message = $argv[1];
-$h = fsockopen('localhost', 8125, $errno, $errstr, 30);
+
+$h = fsockopen($host, $port, $errno, $errstr, 30);
 fwrite($h, $message);
 fclose($h);
 ?>

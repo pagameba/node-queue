@@ -12,7 +12,11 @@ var net = require('net'),
     db = new mongo.Db('node-mongo-queue', new mongo.Server(host, port, {}), {}),
     messages = [],
     waiters = [],
-    emitter = new EventEmitter();
+    emitter = new EventEmitter(),
+    host = '127.0.0.1',
+    push_port = 8001,
+    pull_port = 8002,
+    alive_port = 8003;
 
 sys.puts("Connecting to " + host + ":" + port);
 
@@ -26,7 +30,7 @@ db.open(function(err,db) {
         }
       });
     });
-    net.createServer(function(stream) {}).listen(8124);
+    net.createServer(function(stream) {}).listen(alive_port, host);
     var push = net.createServer(function(stream) {
       var message = '';
       // stream.setEncoding('utf8');
@@ -48,7 +52,7 @@ db.open(function(err,db) {
         });
       });
     });
-    push.listen(8125,'localhost');
+    push.listen(push_port, host);
     var pull = net.createServer(function(stream) {
       stream.on('connect', function(){
         if (messages.length) {
@@ -63,6 +67,8 @@ db.open(function(err,db) {
       // stream.on('data', function(){});
       // stream.on('end', function(){});
     });
+    pull.listen(pull_port, host);
+    
     emitter.on('message', function(){
       if (messages.length && waiters.length) {
         stream = waiters.shift();
@@ -72,7 +78,6 @@ db.open(function(err,db) {
         stream.end();
       }
     });
-    pull.listen(8126,'localhost');
   });
 });
 

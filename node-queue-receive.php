@@ -1,5 +1,9 @@
 <?php
-$h = fsockopen('localhost', 8126, $errno, $errstr);
+$host = 'localhost';
+$host = 'ec2-174-129-57-251.compute-1.amazonaws.com';
+$port = 8002;
+
+$h = fsockopen($host, $port, $errno, $errstr);
 while ($data = fread($h, 4096)) {
   $message .= $data;
 }
