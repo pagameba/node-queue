@@ -14,9 +14,9 @@ var net = require('net'),
     waiters = [],
     emitter = new EventEmitter(),
     host = '127.0.0.1',
-    push_port = 8001,
-    pull_port = 8002,
-    alive_port = 8003;
+    push_port = 8081,
+    pull_port = 8082,
+    alive_port = 8083;
 
 sys.puts("Connecting to " + host + ":" + port);
 

@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
 $host = 'ec2-174-129-57-251.compute-1.amazonaws.com';
-$port = 8001;
+$port = 8081;
 
 $message = $argv[1];
 

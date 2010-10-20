@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
 $host = 'ec2-174-129-57-251.compute-1.amazonaws.com';
-$port = 8002;
+$port = 8082;
 
 $h = fsockopen($host, $port, $errno, $errstr);
 while ($data = fread($h, 4096)) {
