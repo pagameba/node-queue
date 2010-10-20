@@ -60,6 +60,7 @@ db.open(function(err,db) {
           collection.remove({_id: message._id}, function(err, collection) {});
           stream.write(message.message);
           stream.end();
+          sys.puts('Dequeued message ' + message._id + ' at timestamp ' + message.timestamp);
         } else {
           waiters.push(stream);
         }
@@ -76,6 +77,7 @@ db.open(function(err,db) {
         collection.remove({_id: message._id}, function(err, collection) {});
         stream.write(message.message);
         stream.end();
+        sys.puts('Dequeued message ' + message._id + ' at timestamp ' + message.timestamp);
       }
     });
   });
