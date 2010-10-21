@@ -35,8 +35,8 @@ Operations
 
 Unless otherwise specified, all return values are JSON-formatted objects.
 
-list
-----
+Listing Messages
+----------------
 
 Lists messages in a named queue.
 
@@ -46,8 +46,10 @@ Returns status code 200 and lists messages in the specified queue as the content
 
 Example:
 
-stats
------
+    TDB
+
+Getting Information About a Queue
+---------------------------------
 
 Get statistics about a named queue, including number of messages, consumers, and requests served.
 
@@ -56,6 +58,8 @@ Get statistics about a named queue, including number of messages, consumers, and
 Returns status code 200 and the queue stats as the content
 
 Example:
+
+    TDB
 
 configuration
 -------------
@@ -66,23 +70,23 @@ Manage the configuration of a named queue.  Configuration parameters for a queue
 
 * maxconnections - the maximum number of consumers that can be waiting, blocked, for messages coming from a specific queue.  When the maximum number of consumers are waiting, blocked, then new consumers attempting to subscribe to the queue will respond with a 503 status code.
 
+A queue's configuration takes on the default configuration specified in the server configuration file when the queue is created (the first time the queue is named in any request).
+
     GET /<queue>/configuration
 
 Returns status code 200 and the queue configuration information as the content
-
-Example:
 
     GET /<queue>/configuration?<parameter>=<value>
 
 Returns status code 200 with the new configuration information as the content
 
-Example:
-
     PUT /<queue>
 
 Parses the request body as JSON and sets configuration parameters for the queue.
 
-Example:
+Examples:
+
+    TDB
 
 consume
 -------
@@ -93,11 +97,13 @@ Retrieve a message from a named queue.
 
 Returns status code 200 with the next available message from the queue as the content.  The returned message will include a deletekey to be used with a delete operation.  Only the consumer that has locked the message is able to delete it while it is locked.
 
+Returns status code 204 if the request is none blocking
+
 Returns status code 503 if the request would have blocked and the maximum number of consumers are already blocked (see configuration above).
 
-* blocking=false - optional, do not block if no message is available.  By default, the call will block until a message is available.
+blocking=false - optional, do not block if no message is available.  By default, the call will block until a message is available.
 
-* lock=false - optional, do not lock the returned message.  The message will be locked unless otherwise specified.  A locked message will not be returned by subsequent calls to request messages nor will it be available by <id> unless the lock parameter is set to false.
+lock=false - optional, do not lock the returned message.  The message will be locked unless otherwise specified.  A locked message will not be returned by subsequent calls to request messages nor will it be available by <id> unless the lock parameter is set to false.
 
     GET /<queue>/<messageid>?[lock=false]
 
@@ -107,20 +113,24 @@ Returns status code 404 if a message with the specified messageid is not found i
 
 Example:
 
+    TDB
+
 publish
 -------
 
 Publish a message on the named queue.
 
-    GET /<queue>/push?message=<message>
+    GET /<queue>/publish?message=<message>[&priority=<priority>]
 
-Returns status code 200 with the newly inserted message id as the content
+Returns status code 200 with the newly inserted message id as the content if the message was dispatched to a consumer immediately and status code 202 if the message was queued.
 
     POST /<queue>
 
-Uses the request body as the message content.  Returns status code 200 with the newly inserted message's id as the content.
+Uses the request body as the message content.  Returns status code 200 with the newly inserted message's id as the content if the message was dispatched to a consumer immediately and status code 202 if the message was queued.
 
 Example:
+
+   TDB
 
 flush
 -----
@@ -135,6 +145,10 @@ Returns status code 200.
 
 Returns status code 200.
 
+Example:
+
+    TDB
+
 delete
 ------
 
@@ -148,6 +162,11 @@ Returns status code 404 if the specific message was not found in the queue.
 
 Returns status code 403 if the specified message was locked and the deletekey was not specified or it was specified but was incorrect.
 
+Example:
+
+    TDB
+
+
 Getting node-queue
 ==================
 
@@ -159,3 +178,8 @@ Getting node-queue
     cd ../node-microseconds
     node-waf configure build test
 
+Configuration
+=============
+
+Running node-queue
+==================
