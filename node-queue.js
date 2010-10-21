@@ -9,21 +9,39 @@ var http = require('http'),
     mongo_port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? 
       process.env['MONGO_NODE_DRIVER_PORT'] : mongo.Connection.DEFAULT_PORT,
     LINE_SIZE = 120,
-    messages = [],
-    waiters = [],
     emitter = new EventEmitter(),
-    host = 'localhost',
-    web_port = 8080,
-    alive_port = 8083;
+    web_port = 8080;
     
-var options = {
+/* TODO: put this into config.json */
+var config = {
+  web: {
+    port: 8080
+  },
   mongo: {
     host: mongoHost,
     port: mongoPort
   }
-}
+};
 
-
+new QueueManager(config, function(queueManager) {
+  http.createServer(function(request, response) {
+    var parsed = url.parse(request.url, true);
+    var pathComponents = parsed.pathname.split('/').splice(1);
+    switch(request.method) {
+      case 'GET':
+        
+        break;
+      case 'PUT':
+        break;
+      case 'POST':
+       break;
+      case 'DELETE':
+        break;
+      default:
+        
+    }
+  }).listen(config.web.port);
+});
 
 new Queue(options, function(queue) {
   var web = http.createServer(function(request,response){
