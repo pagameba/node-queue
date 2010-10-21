@@ -40,8 +40,9 @@ list
 
 Lists messages in a named queue.
 
-GET /<queue>/list
-returns status code 200 and lists messages in the specified queue as the content
+    GET /<queue>/list
+
+Returns status code 200 and lists messages in the specified queue as the content
 
 Example:
 
@@ -50,8 +51,9 @@ stats
 
 Get statistics about a named queue, including number of messages, consumers, and requests served.
 
-GET /<queue>/stats
-returns status code 200 and the queue stats as the content
+    GET /<queue>/stats
+
+Returns status code 200 and the queue stats as the content
 
 Example:
 
@@ -60,21 +62,24 @@ configuration
 
 Manage the configuration of a named queue.  Configuration parameters for a queue are:
 
-locktimeout - the amount of time in milliseconds that a message will be locked for after it has been requested from a queue.  After the timeout expires, the message will be made generally available on the queue again.
+* locktimeout - the amount of time in milliseconds that a message will be locked for after it has been requested from a queue.  After the timeout expires, the message will be made generally available on the queue again.
 
-maxconnections - the maximum number of consumers that can be waiting, blocked, for messages coming from a specific queue.  When the maximum number of consumers are waiting, blocked, then new consumers attempting to subscribe to the queue will respond with a 503 status code.
+* maxconnections - the maximum number of consumers that can be waiting, blocked, for messages coming from a specific queue.  When the maximum number of consumers are waiting, blocked, then new consumers attempting to subscribe to the queue will respond with a 503 status code.
 
-GET /<queue>/configuration
-returns status code 200 and the queue configuration information as the content
+    GET /<queue>/configuration
+
+Returns status code 200 and the queue configuration information as the content
 
 Example:
 
-GET /<queue>/configuration?<parameter>=<value>
+    GET /<queue>/configuration?<parameter>=<value>
+
 Returns status code 200 with the new configuration information as the content
 
 Example:
 
-PUT /<queue>
+    PUT /<queue>
+
 Parses the request body as JSON and sets configuration parameters for the queue.
 
 Example:
@@ -84,18 +89,21 @@ consume
 
 Retrieve a message from a named queue.
 
-GET /<queue>?[blocking=false]&[lock=false]
-returns status code 200 with the next available message from the queue as the content.  The returned message will include a deletekey to be used with a delete operation.  Only the consumer that has locked the message is able to delete it while it is locked.
+    GET /<queue>?[blocking=false]&[lock=false]
+
+Returns status code 200 with the next available message from the queue as the content.  The returned message will include a deletekey to be used with a delete operation.  Only the consumer that has locked the message is able to delete it while it is locked.
+
 Returns status code 503 if the request would have blocked and the maximum number of consumers are already blocked (see configuration above).
 
 * blocking=false - optional, do not block if no message is available.  By default, the call will block until a message is available.
 
 * lock=false - optional, do not lock the returned message.  The message will be locked unless otherwise specified.  A locked message will not be returned by subsequent calls to request messages nor will it be available by <id> unless the lock parameter is set to false.
 
-GET /<queue>/<messageid>?[lock=false]
-returns status code 200 with the specific message requested by the messageid as the content.  This call does not block.
+    GET /<queue>/<messageid>?[lock=false]
 
-returns status code 404 if a message with the specified messageid is not found in the queue or if the specified message is locked and lock=false is not specified.
+Returns status code 200 with the specific message requested by the messageid as the content.  This call does not block.
+
+Returns status code 404 if a message with the specified messageid is not found in the queue or if the specified message is locked and lock=false is not specified.
 
 Example:
 
@@ -104,23 +112,27 @@ publish
 
 Publish a message on the named queue.
 
-GET /<queue>/push?message=<message>
+    GET /<queue>/push?message=<message>
+
 Returns status code 200 with the newly inserted message id as the content
 
-POST /<queue>
+    POST /<queue>
+
 Uses the request body as the message content.  Returns status code 200 with the newly inserted message's id as the content.
 
-Example.
+Example:
 
 flush
 -----
 
 Flushes all messages from a named queue, preserving queue statistics.
 
-GET /<queue>/flush
+    GET /<queue>/flush
+
 Returns status code 200.
 
-DELETE /<queue>
+    DELETE /<queue>
+
 Returns status code 200.
 
 delete
@@ -128,19 +140,22 @@ delete
 
 Delete a specific message from a named queue.
 
-GET /<queue>/delete?id=<messageid>[&deletedkey=<deletekey>]
+    GET /<queue>/delete?id=<messageid>[&deletedkey=<deletekey>]
+
 Returns status code 200 if the specified message was found in the queue and removed.
+
 Returns status code 404 if the specific message was not found in the queue.
+
 Returns status code 403 if the specified message was locked and the deletekey was not specified or it was specified but was incorrect.
 
 Getting node-queue
 ==================
 
-git clone git://github.com/pagameba/node-queue.git
-cd node-queue
-git submodule update --init
-cd deps/node-mongodb-native
-make
-cd ../node-microseconds
-node-waf configure build test
+    git clone git://github.com/pagameba/node-queue.git
+    cd node-queue
+    git submodule update --init
+    cd deps/node-mongodb-native
+    make
+    cd ../node-microseconds
+    node-waf configure build test
 
