@@ -53,6 +53,9 @@ var operations = {
     var id = query && query['id'] ? query.id : null;
     var lock = query && query['lock'] ? query.lock : null;
     queue.deleteMessage(id, lock, callback);
+  },
+  'cleardeadletters': function(queue, pathComponents, query, content, callback) {
+    queue.clearDeadLetters(callback);
   }
 };
 
