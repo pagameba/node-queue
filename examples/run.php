@@ -1,7 +1,12 @@
 <?php
-$port = 8003;
+// need to run from the correct directory
+chdir('../');
+
+// sample PHP script shows how to run the queue in an infinite loop
+// restarting when the server stops for some reason.
+$port = 8081;
 $node = '/usr/local/bin/node';
-$queue = 'queue.js';
+$queue = 'node-queue.js';
 $queue_cmd = $node.' '.$queue;
 
 while (true) {

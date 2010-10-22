@@ -2,6 +2,10 @@
   "web": {
     "port": 8080
   },
+  "tcp": {
+    "host": "localhost",
+    "port": 8081
+  },
   "queue": {
     "maxconnections": 5,
     "locktimout": 60,

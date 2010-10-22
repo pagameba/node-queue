@@ -5,6 +5,10 @@ Welcome to **node-queue**, a simple, high-performance message queueing system fo
 
 Below this section, you will find an Overview section that provides an overview of how the queueing system works in general and an Operations system that provides specific details on each operation that can be performed against a queue.
 
+**node-queue** is released under an MIT licence, see LICENSE for details.
+
+Please drop me a note if you find it useful, send pull requests if you fix something.  I'm open to suggestions, new features and completely overhauling it too!
+
 Have fun!
 
 Prerequisites
@@ -14,6 +18,30 @@ You'll need the following
 
 * node 
 * libuuid headers in uuid/uuid.h are required (libuuid-devel) to build uuidjs
+
+Dependencies
+------------
+
+All dependencies are all included in the repository.
+
+node-microseconds:
+
+* http://github.com/tmpvar/node-microseconds 
+* simple wrapper around *nix gettimeofday method call.
+* no license provided by code author
+
+node-websocket-server:
+
+* http://github.com/miksago/node-websocket-server 
+* A WebSocket server written in low-level node.js, should be 90-100% spec compatible
+* MIT license
+
+uuidjs:
+
+* http://bitbucket.org/nikhilm/uuidjs/
+* Simple libuuid bindings to allow UUIDs to be generated from JS.
+* MIT license
+* NB: this isn't on github, I used hg to clone it and then included it directly in the deps/ directory
 
 Getting the code
 ----------------
@@ -32,23 +60,33 @@ Configuration
 Copy config.json.sample to config.json.  Edit as required.  Configurable values are:
 
 * web.port - the port to run the http server on, default is 8080
+* tcp.host - the host to run a TCP server on
+* tcp.port - the port to run a TCP server on
 * queue.maxconnections - the maximum number of connected consumers waiting for messages
 * queue.locktimout - the number of seconds a locked message will be left until it is automatically unlocked
 * queue.defaultpriority - the default priority for new messages
 * queue.maxlockcount - the maximum number of times a message should be locked before it is considered dead
 
+**NOTE** the tcp server is intended to provide a way to determine if the server is still running.  The intention is that this would be used in a wrapper script that runs **node-queue**.  A typical script for doing this would start the queue, wait a short period for the TCP port to become available then connect to it and expect to be blocked.  When the connection returns, the server has stopped (or more likely crashed) and action can be taken (such as restarting it).  See examples/run.php for an example of how this was intended to be used.
+
 Running **node-queue**
 ----------------------
 
     node node-queue.js
+    
+Examples
+--------
 
-To Do:
-------
+There are some examples of client scripts that interact with the queue in the examples directory.  I'm happy to add more examples in other languages based on contributions.
+
+To Do
+-----
 
 * investigate methods for distributing the system across multiple servers to remove single point of failure
 * investigate methods of persisting queues and messages to preserve data integrity in the event of server crash
 * write some tests
 * build a web interface hopefully using websockets that allows an administrator to monitor the system
+* finish the documentation
 
 Using **node-queue**
 ====================

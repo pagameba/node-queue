@@ -1,12 +1,15 @@
 <?php
-$host = 'localhost';
-$host = 'ec2-174-129-57-251.compute-1.amazonaws.com';
-$port = 8082;
+// sample php script to consume a message from the queue
 
-$h = fsockopen($host, $port, $errno, $errstr);
-while ($data = fread($h, 4096)) {
-  $message .= $data;
+$host = 'http://localhost:8080/queue/';
+// if run on the cmd line
+$queue = $argv[1];
+
+// if run via web server
+if (isset($_REQUEST['queue'])) {
+  $queue = $_REQUEST['queue'];
 }
-fclose($h);
-echo "message received: ".$message."\n\n";
+$request = $host.$queue;
+echo "request: $request\n";
+echo file_get_contents($request)."\n";
 ?>

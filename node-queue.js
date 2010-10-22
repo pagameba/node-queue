@@ -145,6 +145,16 @@ try {
     }).listen(config.web.port);
     sys.puts("Queue running HTTP on port " + config.web.port);
   });
+  
+  // Open a TCP port if so configured.  A client can connect to this port and
+  // will be blocked as long as the server is running.
+  if (config['tcp'] && 
+      config.tcp['port'] && 
+      config.tcp['host']) {
+    require('net').createServer(function (stream) {
+    }).listen(config.tcp.port, config.tcp.host);
+    sys.puts("TCP running on " + config.tcp.host + ":" + config.tcp.port);
+  }
 } catch(e) {
   sys.puts(sys.inspect(e));
   sys.log("File config.json not found.  Try: `cp config.json.sample config.json`");

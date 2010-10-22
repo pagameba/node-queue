@@ -1,13 +1,17 @@
 <?php
-$host = 'localhost';
-$host = 'ec2-174-129-57-251.compute-1.amazonaws.com';
-$port = 8081;
+// sample php script to publish a message to the queue
 
-$message = $argv[1];
+$host = 'http://localhost:8080/queue/';
+// if run on the cmd line
+$queue = $argv[1];
+$message = $argv[2];
+// if run via web server
+if (isset($_REQUEST['queue'])) {
+  $queue = $_REQUEST['queue'];
+}
 if (isset($_REQUEST['message'])) {
   $message = $_REQUEST['message'];
 }
-$h = fsockopen($host, $port, $errno, $errstr, 30);
-fwrite($h, $message);
-fclose($h);
+$request = $host.$queue.'/publish?message='.urlencode($message);
+echo file_get_contents($request)."\n";
 ?>
