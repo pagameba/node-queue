@@ -9,6 +9,7 @@
 var http = require('http'),
     sys = require("sys"),
     url = require('url'),
+    fs = require('fs'),
     QueueManager = require('./lib/queuemanager').QueueManager;
 
 // Various operations that can happen on a queue.  We figure out which
@@ -57,7 +58,7 @@ var operations = {
 
 // we really want a config file to start with, fail if one is not provided
 try {
-  var config = JSON.parse(fs.readFileSync(__dirname + "/config.json"));
+  var config = JSON.parse(fs.readFileSync("./config.json"));
 
   // kick it all off by creating a queue manager and passing it our callback
   // to run a web server which dispatches requests to the appropriate queue
@@ -90,7 +91,7 @@ try {
           'Content-type':contentType,
           'Content-length': obj.length
         });
-        response.end(body, 'utf-8');
+        response.end(obj, 'utf-8');
       };
       // Decide if we are dispatching an operation to a queue or serving some
       // other web request.
@@ -142,6 +143,7 @@ try {
     sys.puts("Queue running HTTP on port " + config.web.port);
   });
 } catch(e) {
+  sys.puts(sys.inspect(e));
   sys.log("File config.json not found.  Try: `cp config.json.sample config.json`");
 }
 
