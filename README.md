@@ -173,10 +173,10 @@ Getting node-queue
     git clone git://github.com/pagameba/node-queue.git
     cd node-queue
     git submodule update --init
-    cd deps/node-mongodb-native
-    make
-    cd ../node-microseconds
+    cd deps/node-microseconds
     node-waf configure build test
+    cd ../uuidjs
+    node-waf configure build
 
 Configuration
 =============

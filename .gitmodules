@@ -3,9 +3,6 @@
 [submodule "deps/node-websocket-server"]
 	path = deps/node-websocket-server
 	url = http://github.com/miksago/node-websocket-server.git
-[submodule "deps/node-mongodb-native"]
-	path = deps/node-mongodb-native
-	url = http://github.com/christkv/node-mongodb-native.git
 [submodule "deps/node-microseconds"]
 	path = deps/node-microseconds
 	url = http://github.com/tmpvar/node-microseconds.git
