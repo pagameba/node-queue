@@ -1,0 +1,11 @@
+{
+  "web": {
+    "port": 8080
+  },
+  "queue": {
+    "maxconnections": 5,
+    "locktimout": 60,
+    "defaultpriority": 2,
+    "maxlockcount": 2
+  }
+}
