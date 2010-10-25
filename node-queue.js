@@ -89,6 +89,10 @@ try {
           contentType = 'text/plain; charset=utf-8';
         } else {
           obj = obj ? JSON.stringify(obj) : '';
+          if (query && query['callback']) {
+            contentType = 'application/javascript';
+            obj = query.callback+'('+obj+');';
+          }
         }
         response.writeHead(status, {
           'Content-type':contentType,
