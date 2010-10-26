@@ -7,7 +7,7 @@
  */
 
 var http = require('http'),
-    sys = require("sys"),
+    util = require("util"),
     url = require('url'),
     fs = require('fs'),
     QueueManager = require('./lib/queuemanager').QueueManager;
@@ -82,6 +82,7 @@ try {
       // for a message until one becomes available (for instance).  Depending
       // on the type of obj, we will use (object) text/json or (string) 
       // text/plain for the content type of the response.
+      var opName;
       var callback = function(status, obj) {
         var contentType = 'text/json; charset=utf-8';
         status = status || 200;
@@ -99,6 +100,7 @@ try {
           'Content-length': obj.length
         });
         response.end(obj, 'utf-8');
+        log( request.method + ': ' + opName + ' response: ' + status , obj);
       };
       // Decide if we are dispatching an operation to a queue or serving some
       // other web request.
@@ -119,12 +121,13 @@ try {
           } else {
             queueManager.getQueue(queueName, function(queue) {
               // default operation by request type
-              var opName = defaultOperations[request.method] || 'consume';
+              opName = defaultOperations[request.method] || 'consume';
               // override operation if the next component of the path is an operation
               if (pathComponents.length && operations[pathComponents[0]]) {
                 opName = pathComponents.shift();
               }
               var operation = operations[opName];
+              log(request.method + ': ' + opName + ': ' + request.url);
               // if the method includes content in the body of the request, read it
               // all and pass it to the operation, otherwise just do the operation
               // with no content (assuming that the operation can find its content
@@ -139,6 +142,9 @@ try {
               } else {
                 operation(queue, pathComponents, query, content, callback);
               }
+              request.connection.on('end', function() {
+                queue.removeConsumer(callback);
+              });
             });
           }
           break;
@@ -147,7 +153,7 @@ try {
           break;
       }
     }).listen(config.web.port);
-    sys.puts("Queue running HTTP on port " + config.web.port);
+    util.log("Queue running HTTP on port " + config.web.port);
   });
   
   // Open a TCP port if so configured.  A client can connect to this port and
@@ -157,10 +163,20 @@ try {
       config.tcp['host']) {
     require('net').createServer(function (stream) {
     }).listen(config.tcp.port, config.tcp.host);
-    sys.puts("TCP running on " + config.tcp.host + ":" + config.tcp.port);
+    util.log("TCP running on " + config.tcp.host + ":" + config.tcp.port);
   }
 } catch(e) {
-  sys.puts(sys.inspect(e));
-  sys.log("File config.json not found.  Try: `cp config.json.sample config.json`");
+  util.log(util.inspect(e));
+  util.log("File config.json not found.  Try: `cp config.json.sample config.json`");
 }
 
+function log(message, detail) {
+  if (config.log == 1) {
+    util.log(message);
+  } else if (config.log == 2) {
+    if (detail) {
+      message += ' : ' + detail;
+    }
+    util.log(message);
+  }
+}
