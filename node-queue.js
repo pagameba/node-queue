@@ -142,6 +142,12 @@ try {
               } else {
                 operation(queue, pathComponents, query, content, callback);
               }
+              request.connection.on('error', function() {
+                queue.removeConsumer(callback);
+              });
+              request.connection.on('timeout', function() {
+                queue.removeConsumer(callback);
+              });
               request.connection.on('end', function() {
                 queue.removeConsumer(callback);
               });
