@@ -1,6 +1,5 @@
 <?php
 // sample php script to consume a message from the queue
-
 $host = 'http://localhost:8080/queue/';
 // if run on the cmd line
 $queue = $argv[1];
